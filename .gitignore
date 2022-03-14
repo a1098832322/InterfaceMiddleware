@@ -41,3 +41,5 @@ build/
 /msg-middleware-core/mvnw
 /msg-middleware-core/mvnw.cmd
 rebel.xml
+/msg-middleware-core/.mvn/
+/msg-middleware-sdk/target/
