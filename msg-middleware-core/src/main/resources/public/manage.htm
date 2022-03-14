@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>接口字段维护页面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="https://cdn.bootcss.com/vue/2.5.2/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.17.1/axios.min.js"></script>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+    <style>
+    </style>
+</head>
+<body>
+<div id="myApp" class="main">
+    <div class="container">
+        <h1>接口字段维护页面 <small>-- msg-middleware</small></h1>
+        <div class="row">
+            <div class="col-md-4">
+                <h3>系统表 <small>-- System Table</small></h3>
+                <div v-for="item in systemInfoList" class="radio">
+                    <label>
+                        <input type="radio" :value="item.id" v-model="systemVal"  @change="systemChange"/>{{item.key}}:{{item.name}}
+                    </label>
+                </div>
+                <input type="button" class="btn btn-primary" value="保存" @click="updateRelate">
+<!--                <input type="button" class="btn btn-default" value="控制台预览" @click="printVal">-->
+            </div>
+
+            <div class="col-md-4" style="overflow: auto;">
+                <h3>接口表 <small>-- Interface Table</small></h3>
+                <div v-for="item in interfaceInfoList" class="radio">
+                    <label><input type="radio" :value="item.id" v-model="interfaceVal" :checked="item.checked" @change="interfaceChange"/>{{item.key}}:{{item.name}}</label>
+                </div>
+            </div>
+
+            <div class="col-md-4" style="overflow: auto;">
+                <h3>字段表 <small>-- Field Table</small></h3>
+                <div v-for="item in allFields" class="checkbox">
+                    <label class="col-md-8" ><input type="checkbox" :value="item.id" v-model="item.checked" :checked="item.checked" @change="fieldChange"/>{{item.name}}:{{item.type}}</label>
+                    <label class="col-md-4" ><input type="checkbox" :value="item.id" v-model="item.essentialChecked" :checked="item.essentialChecked" @change="fieldChange"/>必填</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div class="toast-wrap">
+    <span class="toast-msg"></span>
+</div>
+</body>
+
+<script>
+    const BASE_URL = ""
+    const URL = {
+        "querySystemInfoList": "/management/querySystemInfoList",
+        "queryInterfaceList": "/management/queryInterfaceList",
+        "queryAllFields": "/management/queryAllFields",
+        "queryRelateFieldsByInterfaceId": "/management/queryRelateFieldsByInterfaceId",
+        "updateRelate": "/management/updateRelate",
+        "relateModule": "/management/relateModule",
+    }
+    function toast(msg) {
+        setTimeout(function () {
+            document.getElementsByClassName('toast-wrap')[0].getElementsByClassName('toast-msg')[0].innerHTML = msg;
+            var toastTag = document.getElementsByClassName('toast-wrap')[0];
+            toastTag.className = toastTag.className.replace('toastAnimate', '');
+            setTimeout(function () {
+                toastTag.className = toastTag.className + ' toastAnimate';
+            }, 100);
+        }, 500);
+    }
+
+    var myApp = new Vue({
+        el: "#myApp",
+        data: {
+            systemInfoList: [],
+            interfaceInfoList: [],
+            allFields:[],
+            systemVal: null,
+            interfaceVal:null,
+            fieldVal:[],
+            allFieldsReset:[],
+        },
+        methods: {
+            systemChange(e) {
+                this.interfaceVal = null
+                this.fieldReset()
+                this.getInterfaceListById(this.systemVal)
+                this.printVal()
+            },
+            interfaceChange(e) {
+                this.fieldReset()
+                this.getRelateFieldsByInterfaceId(this.interfaceVal)
+            },
+            fieldChange(e) {
+                let list = this.allFields
+                let jsonField = []
+                for(let i in list){
+                    if(list[i].essentialChecked === true){
+                        list[i].essential = 1
+                    }else{
+                        list[i].essential = 0
+                    }
+                    if(list[i].checked === true){
+                        jsonField.push(list[i])
+                    }
+                }
+                this.fieldVal = jsonField
+                this.printVal()
+            },
+            fieldReset(){
+                this.fieldVal = []
+                this.allFields = JSON.parse(JSON.stringify(this.allFieldsReset))
+            },
+            printVal(){
+              console.log("systemId:",this.systemVal,"interfaceId:",this.interfaceVal,"fieldList:",this.fieldVal)
+            },
+            getSystemInfoList() {
+                axios.get(URL.querySystemInfoList).then(res => {
+                    if (res.data.code === 200) {
+                        let data = res.data.data
+                        this.systemInfoList = data;
+                    }
+                })
+            },
+            getInterfaceList() {
+                axios.get(URL.queryInterfaceList).then(res => {
+                    if (res.data.code === 200) {
+                        let data = res.data.data
+                        this.interfaceInfoList = data;
+                    }
+                })
+            },
+            getInterfaceListById(id) {
+                axios.get(URL.queryInterfaceList + "?systemInfoId=" + id).then(res => {
+                    if (res.data.code === 200) {
+                        let data = res.data.data
+                        this.interfaceInfoList = data;
+                    }
+                })
+            },
+            getAllFields() {
+                axios.get(URL.queryAllFields).then(res => {
+                    if (res.data.code === 200) {
+                        let data = res.data.data
+                        for (let i in data) {
+                            data[i].checked = false
+                        }
+                        this.allFields = data;
+                        this.allFieldsReset = data;
+                    }
+                })
+            },
+            getRelateFieldsByInterfaceId(id) {
+                axios.get(URL.queryRelateFieldsByInterfaceId+"?interfaceId="+id).then(res => {
+                    if (res.data.code === 200) {
+                        let data = res.data.data
+                        let idArray = []
+                        let essArray = []
+                        for (let i in data) {
+                            idArray.push(data[i].id)
+                            if(data[i].essential === 1){
+                                essArray.push(data[i].id)
+                            }
+
+                        }
+                        let list = this.allFields
+                        for (let i in list) {
+                            if (idArray.indexOf(list[i].id) > -1) {
+                                list[i].checked = true
+                            } else {
+                                list[i].checked = false
+                            }
+                            if (essArray.indexOf(list[i].id) > -1) {
+                                list[i].essentialChecked = true
+                            } else {
+                                list[i].essentialChecked = false
+                            }
+                        }
+                        this.allFields = JSON.parse(JSON.stringify(list))
+                        this.fieldChange()
+                    }
+                })
+            },
+            updateRelate(){
+                let interfaceId = this.interfaceVal
+                let fieldList = this.fieldVal
+                axios.put(URL.updateRelate,{
+                    id:interfaceId,
+                    fieldList:fieldList
+                }).then(res => {
+                    let data = res.data.data
+                    console.log(data)
+                    if (res.data.code === 200) {
+                        alert(data)
+                    }else{
+                        alert(data)
+                    }
+                })
+            },
+        },
+        mounted() { //页面加载完成后执行访问后端的函数
+            this.getSystemInfoList()
+            this.getInterfaceList()
+            this.getAllFields()
+        }
+    })
+</script>
+</html>

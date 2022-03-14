@@ -1,0 +1,48 @@
+# 端口
+server:
+  port: 10030
+# 系统配置
+spring:
+  data:
+    #关闭redis的repository
+    redis:
+      repositories:
+        enabled: false
+  application:
+    name: Msg-Middleware
+  profiles:
+    # 本地开发文件测试
+    #active: dev
+    # 局域网配置文件
+    active: product
+  #jpa
+  jpa:
+    hibernate:
+      #关闭ddl
+      ddl-auto: update
+      naming:
+        #支持读取包含下划线的字段
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: false
+    open-in-view: false
+    generate-ddl: false
+    properties:
+      hibernate:
+        #格式化SQL
+        format_sql: false
+    database-platform: org.hibernate.dialect.MySQLDialect
+  #Active MQ配置
+  activemq:
+    pool:
+      enabled: true
+    packages:
+      #对象传输需开启包白名单 否则会报错
+      trust-all: true
+    broker-url: tcp://192.168.200.2:61616
+    user: admin
+    password: admin
+    #Active MQ主题详细配置
+    theme:
+      #因为消息中间件只消费下游系统发布的消息，所以这里只做订阅
+      topic-consumer:
+        names: IMS_MESSAGE,DMS_MESSAGE,OSP_MESSAGE
