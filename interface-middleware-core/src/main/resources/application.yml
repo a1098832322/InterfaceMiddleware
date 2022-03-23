@@ -33,6 +33,10 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
   #Active MQ配置
   activemq:
+    component:
+      support:
+        #默认关闭ActiveMQ组件
+        enable: false
     pool:
       enabled: true
     packages:

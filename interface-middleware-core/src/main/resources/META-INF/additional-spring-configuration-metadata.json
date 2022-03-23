@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "spring.activemq.component.support.enable",
+      "type": "java.lang.Boolean",
+      "description": "用于控制ActiveMQ支持组件的开关."
+    }
+  ]
+}

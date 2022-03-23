@@ -55,6 +55,7 @@ public class ActiveMQConfig {
      */
     @Bean("activeMqConnection")
     @ConditionalOnBean(ActiveMQConnectionFactory.class)
+    @ConditionalOnProperty(prefix = "activemq.component.support", name = "enable", havingValue = "true")
     public Connection activeMqConnection(@Qualifier("mqttConnectionFactory") ActiveMQConnectionFactory connectionFactory)
             throws JMSException {
         Connection connection = null;
