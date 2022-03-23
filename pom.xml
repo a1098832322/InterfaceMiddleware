@@ -16,9 +16,9 @@
     </properties>
 
     <modules>
-        <module>msg-middleware-core</module>
-        <module>msg-middleware-sdk</module>
-        <module>msg-middleware-springboot-starter</module>
+        <module>interface-middleware-core</module>
+        <module>interface-middleware-sdk</module>
+        <module>interface-middleware-springboot-starter</module>
     </modules>
 
     <!--远程上传-->
