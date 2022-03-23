@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.zl</groupId>
-    <artifactId>msg-middleware-springboot-starter</artifactId>
+    <artifactId>interface-middleware-springboot-starter</artifactId>
     <version>1.0.0</version>
     <description>适用于Springboot的框架</description>
 
@@ -38,7 +38,7 @@
     <dependencies>
         <dependency>
             <groupId>com.zl</groupId>
-            <artifactId>msg-middleware-sdk</artifactId>
+            <artifactId>interface-middleware-sdk</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>

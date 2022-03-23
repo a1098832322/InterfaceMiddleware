@@ -3,11 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.zl</groupId>
-    <artifactId>message-middleware</artifactId>
+    <artifactId>interface-middleware</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>middleware</name>
-    <description>消息推送中间件项目</description>
+    <name>interface-middleware</name>
+    <description>接口对接中间件项目</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -16,9 +16,9 @@
     </properties>
 
     <modules>
+        <module>msg-middleware-core</module>
         <module>msg-middleware-sdk</module>
         <module>msg-middleware-springboot-starter</module>
-        <module>msg-middleware-core</module>
     </modules>
 
     <!--远程上传-->

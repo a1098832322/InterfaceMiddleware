@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.zl</groupId>
-    <artifactId>msg-middleware-sdk</artifactId>
+    <artifactId>interface-middleware-sdk</artifactId>
     <version>1.0.0</version>
     <description>给其他已部署系统对接使用的SDK</description>
     <properties>
